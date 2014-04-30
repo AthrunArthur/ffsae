@@ -1,6 +1,8 @@
 #include "dsource/Slice.h"
 #include <matio.h>
 #include "common/scope_guard.h"
+#include <cstdlib>
+#include <cstring>
 
 namespace ff{
   Slice::Slice(const uint8_t * pdata, size_t len, int actual_number)

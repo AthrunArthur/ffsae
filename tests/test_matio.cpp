@@ -3,6 +3,8 @@
 #include <matio.h>
 #include <cmath>
 #include <vector>
+#include <cstdlib>
+#include <cstring>
 
 
 
