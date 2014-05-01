@@ -4,10 +4,12 @@
 int main(int argc, const char *argv[])
 {
   auto s = ff::Slice::getAllSlices();
+  int count = 0;
   for(auto pss : s)
   {
     ff::Slice & ss = *(pss.get());
        int dim = static_cast<int>(sqrt(ss.len()));
+       std::cout<<"ss len() : "<<ss.len()<<std::endl;
        std::cout<<"************************* "<<ss.num()<<std::endl;
       for(int i = 0; i < dim; ++i)
       {
@@ -17,6 +19,9 @@ int main(int argc, const char *argv[])
         }
         std::cout<<std::endl;
       } 
+    count ++;
+    if(count >= 20)
+	break;
   }
   return 0;
 }

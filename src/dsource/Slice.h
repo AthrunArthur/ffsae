@@ -23,6 +23,7 @@ namespace ff{
 
       size_t      len() const{return m_iDataLen;}
       int         num() const{return m_iActualNumber;}
+      void        set_num(int actual_number){m_iActualNumber = actual_number;}
         
 
       static  Slices_t  getAllSlices();

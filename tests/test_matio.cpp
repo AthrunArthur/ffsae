@@ -45,9 +45,7 @@ int main(int argc, char *argv[]) {
                     }
                     std::cout<<std::endl;
                 }
-
             }
-            
         }
         std::cout << "closing mat file..." << std::endl;
         Mat_Close(mat);
