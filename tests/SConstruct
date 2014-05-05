@@ -2,9 +2,8 @@ import os
 cwd = os.path.dirname(Dir('.').srcnode().abspath)
 ff_path = os.path.join(cwd, 'src/')
 lib_path = os.path.join(cwd, 'build/')
-print ff_path
-print '\\$$ORIGIN'
-print os.pardir
+
+
 env = Environment(CXXFLAGS='-std=c++11',
     CPPPATH=ff_path,
     LIBPATH=lib_path,
@@ -13,3 +12,5 @@ env = Environment(CXXFLAGS='-std=c++11',
 libs = ['matio', 'ffsae']
 env.Program('test_matio.cpp', LIBS=['matio'])
 env.Program('test_slice.cpp', LIBS=libs)
+
+env.Program('test_blaze.cpp', LIBS=libs+['blaze'])
