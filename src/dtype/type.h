@@ -9,10 +9,10 @@ namespace ff
   typedef std::shared_ptr<FMatrix> FMatrix_ptr;
 
   template <class T>
-  struct is_matrix{};
+  struct is_matrix{const static bool value=false;};
 
   template <>
-  struct is_matrix<FMatrix>{const static bool value = true;}
+  struct is_matrix<FMatrix>{const static bool value = true;};
 }
 
 #endif

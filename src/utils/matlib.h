@@ -27,14 +27,15 @@ namespace ff
 
     template<class T1, class T2>
     struct is_one_matrix_one_arith{
-        static const bool value = (std::is_arithmetic<T1>::value || std::is_arithmetic<T2>::value) && (is_matrix<T2>::value || is_matrix<T2>::value);
+        static const bool value = (std::is_arithmetic<T1>::value || std::is_arithmetic<T2>::value) && (is_matrix<T1>::value || is_matrix<T2>::value);
     };//end struct is_one_matrix_one_arith;
 
     template <class T1, class T2>
       struct matrix_type{
-        typedef std::conditional<is_matrix<T1>::value, T1, T2>::type type;
+        typedef typename std::conditional<is_matrix<T1>::value, T1, T2>::type type;
       };//end struct matrix_type
     
+    ///TODO : performance issue here, we should use lazy evaluation here!
     template<class T>
     FMatrix add(const FMatrix & m, T && v)
     {
@@ -49,23 +50,89 @@ namespace ff
         return res;
     }
    
-    template <class T1, class T2>
-    typename matrix_type<T1, T2>::type operator + (T1 && t1, T2 && t2, 
-        typename std::enable_if<
-                is_one_matrix_one_arith<T1, T2>::value, 
-                void>::type * p = nullptr)
+    template<class T>
+    FMatrix sub(const FMatrix & m, T && v)
     {
-      if (is_matrix<T1>::value)
-      {
-        return add(t1, t2);
-      }
-      else
-      {
-        return add(t2, t1);
-      }
+        FMatrix res(m.rows(), m.columns());
+        for(int i = 0; i < m.rows(); i++)
+        {
+           for(int j = 0; j < m.columns(); ++j)
+           {
+             res(i, j) = m(i, j) - v;
+           }
+        }
+        return res;
     }
 
+    template<class T>
+    FMatrix mul(const FMatrix & m, T && v)
+    {
+        FMatrix res(m.rows(), m.columns());
+        for(int i = 0; i < m.rows(); i++)
+        {
+           for(int j = 0; j < m.columns(); ++j)
+           {
+             res(i, j) = m(i, j) * v;
+           }
+        }
+        return res;
+    }
+    template<class T>
+    FMatrix div(const FMatrix & m, T && v)
+    {
+        FMatrix res(m.rows(), m.columns());
+        for(int i = 0; i < m.rows(); i++)
+        {
+           for(int j = 0; j < m.columns(); ++j)
+           {
+             res(i, j) = m(i, j) / v;
+           }
+        }
+        return res;
+    }
 };//end namespace ff
-
+    template <class T>
+    ff::FMatrix operator + (const ff::FMatrix & t1, const T & t )
+    {
+      return ff::add(t1, t);
+    }
+    template <class T>
+    ff::FMatrix operator + (const T & t1, const ff::FMatrix & t )
+    {
+      return ff::add(t, t1);
+    }
+   //////////////////////////////
+    template <class T>
+    ff::FMatrix operator-  (const ff::FMatrix & t1, const T & t )
+    {
+      return ff::sub(t1, t);
+    }
+    template <class T>
+    ff::FMatrix operator - (const T & t1, const ff::FMatrix & t )
+    {
+      return ff::sub(t, t1);
+    }
+/////////////////
+    template <class T>
+    ff::FMatrix operator * (const ff::FMatrix & t1, const T & t )
+    {
+      return ff::mul(t1, t);
+    }
+    template <class T>
+    ff::FMatrix operator * (const T & t1, const ff::FMatrix & t )
+    {
+      return ff::mul(t, t1);
+    }
+////////////////
+    template <class T>
+    ff::FMatrix operator / (const ff::FMatrix & t1, const T & t )
+    {
+      return ff::div(t1, t);
+    }
+    template <class T>
+    ff::FMatrix operator / (const T & t1, const ff::FMatrix & t )
+    {
+      return ff::div(t, t1);
+    }
 #endif
 
