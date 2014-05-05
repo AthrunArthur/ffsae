@@ -7,6 +7,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <time.h>
+#include "dtype/type.h"
 
 namespace ff{
     double        sigm(const double & x){return 1.0/(1+exp(-x));};//原函数直接实现矩阵计算
@@ -30,5 +31,6 @@ namespace ff{
     };//SAE示例代码中未使用
     
     double        tanh_opt(const double & x){return 1.7159*tanh(2.0/3 * x);};//原函数直接实现矩阵计算
+
 }//end namespace ff
 #endif
