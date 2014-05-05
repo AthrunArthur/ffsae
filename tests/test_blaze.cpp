@@ -16,7 +16,9 @@ int main(int argc, char *argv[]) {
   b[2] = -3;
   // // Adding the vectors a and b
   DynamicVector<int> c = a + b;
+  
   // // Printing the result of the vector addition
   std::cout << "c =\n" << c << "\n";
+
   return 0;
 }

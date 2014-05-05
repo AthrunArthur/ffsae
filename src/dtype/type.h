@@ -8,10 +8,10 @@ namespace ff
   typedef blaze::DynamicMatrix<double, blaze::rowMajor> FMatrix;
 
   template <class T>
-  struct is_matrix{};
+  struct is_matrix{const static bool value=false;};
 
   template <>
-  struct is_matrix<FMatrix>{const static bool value = true;}
+  struct is_matrix<FMatrix>{const static bool value = true;};
 }
 
 #endif
