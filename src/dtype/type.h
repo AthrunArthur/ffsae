@@ -6,6 +6,7 @@
 namespace ff
 {
   typedef blaze::DynamicMatrix<double, blaze::rowMajor> FMatrix;
+  typedef std::shared_ptr<FMatrix> FMatrix_ptr;
 
   template <class T>
   struct is_matrix{};
