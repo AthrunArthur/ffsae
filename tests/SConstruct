@@ -15,3 +15,4 @@ env.Program('test_slice.cpp', LIBS=libs)
 
 env.Program('test_blaze.cpp', LIBS=libs+['blaze'])
 env.Program('test_dtype.cpp', LIBS=libs+['blaze'])
+env.Program('test_sae.cpp', LIBS=libs + ['blaze'])

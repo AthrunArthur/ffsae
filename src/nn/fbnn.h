@@ -3,6 +3,7 @@
 
 #include "common/common.h"
 #include "arch.h"
+#include "utils/matlib.h"
 
 namespace ff
 {
@@ -13,8 +14,21 @@ namespace ff
     public:
       FBNN(const Arch_t & arch)
        : m_oArch(arch)
-         , m_iN(arch.size())
+         , m_iN(numel(m_oArch))
+         , m_strActivationFunction("tanh_opt")
+         , m_strOutput("sigm")
       {
+        for(int i = 1; i < m_iN; ++i)
+        {
+          FMatrix f = rand(m_oArch[i], m_oArch[i-1] + 1) -0.5 * 2 * 4 * sqrt(6/(m_oArch[i] + m_oArch[i-1]));
+          m_oWs.push_back(std::make_shared<FMatrix>(f));
+          FMatrix z = zeros(f.rows(), f.columns());
+          m_oVWs.push_back(std::make_shared<FMatrix>(z));
+          FMatrix p = zeros(1, m_oArch[i]);
+          m_oPs.push_back(std::make_shared<FMatrix>(p));
+
+        }
+        
       }
       FBNN(const FBNN & p) = delete;
       FBNN & operator =(const FBNN & p) = delete;
@@ -23,20 +37,25 @@ namespace ff
         
       const Arch_t &    m_oArch;
       int         m_iN;
-      static const std::string       m_strActivationFunction = "tanh_opt";
-      static const int         m_iLearningRate=2;
-      static const double      m_fMomentum = 0.5;
-      static const double      m_fScalingLearningRate= 1;
-      static const double      m_fWeithtPenaltyL2 = 0;
-      static const double      m_fNonSparsityPenalty = 0;
-      static const double      m_fSparsityTarget = 0.05;
-      static const double      m_fInputZeroMaskedFraction = 0;
-      static const double      m_fDropoutFraction = 0;
-      static const double      m_fTesting = 0;
-      static const double      m_strOutput = "sigm";
+      std::string       m_strActivationFunction;
+      static constexpr int         m_iLearningRate=2;
+      static constexpr double      m_fMomentum = 0.5;
+      static constexpr double      m_fScalingLearningRate= 1;
+      static constexpr double      m_fWeithtPenaltyL2 = 0;
+      static constexpr double      m_fNonSparsityPenalty = 0;
+      static constexpr double      m_fSparsityTarget = 0.05;
+      static constexpr double      m_fInputZeroMaskedFraction = 0;
+      static constexpr double      m_fDropoutFraction = 0;
+      static constexpr double      m_fTesting = 0;
+      std::string m_strOutput;
+
+      std::vector<FMatrix_ptr>  m_oWs;
+      std::vector<FMatrix_ptr>  m_oVWs;
+      std::vector<FMatrix_ptr>  m_oPs;
 
     
   };//end class FBNN
+  typedef std::shared_ptr<FBNN> FBNN_ptr;
 }//end namespace ff
 
 #endif

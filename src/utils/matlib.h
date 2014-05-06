@@ -25,16 +25,17 @@ namespace ff
         return res;
     }
 
-    template<class T1, class T2>
-    struct is_one_matrix_one_arith{
-        static const bool value = (std::is_arithmetic<T1>::value || std::is_arithmetic<T2>::value) && (is_matrix<T1>::value || is_matrix<T2>::value);
-    };//end struct is_one_matrix_one_arith;
+    template<class T>
+    size_t      numel(const T & t, typename std::enable_if<is_matrix<T>::value, void>::type *p = nullptr)
+    {
+      return t.rows() * t.columns();
+    }
 
-    template <class T1, class T2>
-      struct matrix_type{
-        typedef typename std::conditional<is_matrix<T1>::value, T1, T2>::type type;
-      };//end struct matrix_type
-    
+    FMatrix  zeros(int m, int n)
+    {
+      FMatrix res(m, n, 0.0);
+      return res;
+    }
     ///TODO : performance issue here, we should use lazy evaluation here!
     template<class T>
     FMatrix add(const FMatrix & m, T && v)
