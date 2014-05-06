@@ -7,5 +7,6 @@ int main(int argc, char *argv[])
   m(0, 0) = 784;
   m(0, 1) = 100;
   ff::SAE s(m);
+  //need check if s is correct!!!
   return 0;
 }
