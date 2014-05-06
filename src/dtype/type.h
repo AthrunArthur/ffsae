@@ -2,6 +2,7 @@
 #define FFSAE_DTYPE_TYPE_H_
 
 #include <blaze/Math.h>
+#include <memory>
 
 namespace ff
 {
