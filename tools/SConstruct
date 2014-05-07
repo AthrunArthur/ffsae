@@ -1,3 +1,11 @@
 import os
-env = Environment(CXXFLAGS='-std=c++11')
+cwd = os.path.dirname(Dir('.').srcnode().abspath)
+ff_path = os.path.join(cwd, 'src/')
+lib_path = os.path.join(cwd, 'build/')
+
+
+env = Environment(CXXFLAGS='-std=c++11 -g',
+    CPPPATH=ff_path,
+    LIBPATH=lib_path,
+    RPATH=[lib_path, '/usr/local/lib'])
 env.Program(['matview.cpp'], LIBS=['matio'])

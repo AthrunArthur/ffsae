@@ -15,6 +15,7 @@ namespace ff
     matvar_t  * tvar = Mat_VarRead(mat, varname);
     int rows = tvar->dims[0];
     int columns = tvar->dims[1];
+    std::cout<<rows<<"   "<<columns<<std::endl;
     uint8_t * pData = static_cast<uint8_t *>(tvar->data);
     FMatrix_ptr res = std::make_shared<FMatrix>(rows, columns);
     for(int k = 0; k < rows; ++k)
