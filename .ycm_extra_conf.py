@@ -31,14 +31,15 @@
 import os
 import ycm_core
 
+mypath = os.path.join(os.path.dirname(os.path.abspath(__file__)) + 'src/')
+
 # These are the compilation flags that will be used in case there's no
 # compilation database set (by default, one is not set).
 # CHANGE THIS LIST OF FLAGS. YES, THIS IS THE DROID YOU HAVE BEEN LOOKING FOR.
 flags = [
 '-Wall',
 '-Wextra',
-'-Werror',
-'-Wc++98-compat',
+# '-Werror',
 '-Wno-long-long',
 '-Wno-variadic-macros',
 '-fexceptions',
@@ -72,6 +73,8 @@ flags = [
 '-I',
 '.',
 '-I',
+'./src',
+'-I',
 './ClangCompleter',
 '-isystem',
 './tests/gmock/gtest',
@@ -90,7 +93,7 @@ flags = [
 '-isystem',
 '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
 '-I',
-os.path.dirname(os.path.abspath(__file__) + 'src/')
+mypath,
 ]
 
 
@@ -107,7 +110,7 @@ if os.path.exists( compilation_database_folder ):
 else:
   database = None
 
-SOURCE_EXTENSIONS = [ '.cpp', '.cxx', '.cc', '.c', '.m', '.mm' ]
+SOURCE_EXTENSIONS = [ '.h', '.cpp', '.cxx', '.cc', '.c', '.m', '.mm' ]
 
 def DirectoryOfThisScript():
   return os.path.dirname( os.path.abspath( __file__ ) )

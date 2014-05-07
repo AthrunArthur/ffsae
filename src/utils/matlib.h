@@ -41,9 +41,9 @@ namespace ff
     FMatrix add(const FMatrix & m, T && v)
     {
         FMatrix res(m.rows(), m.columns());
-        for(int i = 0; i < m.rows(); i++)
+        for(size_t i = 0; i < m.rows(); i++)
         {
-           for(int j = 0; j < m.columns(); ++j)
+           for(size_t j = 0; j < m.columns(); ++j)
            {
              res(i, j) = m(i, j) + v;
            }
@@ -55,9 +55,9 @@ namespace ff
     FMatrix sub(const FMatrix & m, T && v)
     {
         FMatrix res(m.rows(), m.columns());
-        for(int i = 0; i < m.rows(); i++)
+        for(size_t i = 0; i < m.rows(); i++)
         {
-           for(int j = 0; j < m.columns(); ++j)
+           for(size_t j = 0; j < m.columns(); ++j)
            {
              res(i, j) = m(i, j) - v;
            }
@@ -69,9 +69,9 @@ namespace ff
     FMatrix mul(const FMatrix & m, T && v)
     {
         FMatrix res(m.rows(), m.columns());
-        for(int i = 0; i < m.rows(); i++)
+        for(size_t i = 0; i < m.rows(); i++)
         {
-           for(int j = 0; j < m.columns(); ++j)
+           for(size_t j = 0; j < m.columns(); ++j)
            {
              res(i, j) = m(i, j) * v;
            }
@@ -82,9 +82,9 @@ namespace ff
     FMatrix div(const FMatrix & m, T && v)
     {
         FMatrix res(m.rows(), m.columns());
-        for(int i = 0; i < m.rows(); i++)
+        for(size_t i = 0; i < m.rows(); i++)
         {
-           for(int j = 0; j < m.columns(); ++j)
+           for(size_t j = 0; j < m.columns(); ++j)
            {
              res(i, j) = m(i, j) / v;
            }

@@ -9,6 +9,4 @@
 #include <cassert>
 #include <type_traits>
 
-
-
 #endif
