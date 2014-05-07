@@ -2,8 +2,9 @@
 #define FFSAE_NN_FBNN_H_
 
 #include "common/common.h"
-#include "arch.h"
+#include "nn/arch.h"
 #include "utils/matlib.h"
+#include "dsource/Slice.h"
 
 namespace ff
 {
@@ -14,7 +15,7 @@ namespace ff
     public:
       FBNN(const Arch_t & arch)
        : m_oArch(arch)
-         , m_iN(numel(m_oArch))
+         , m_iN(numel(arch))
          , m_strActivationFunction("tanh_opt")
          , m_strOutput("sigm")
       {
@@ -35,6 +36,11 @@ namespace ff
       std::vector<FMatrix_ptr> & get_m_oWs(void){return m_oWs;};
       std::vector<FMatrix_ptr> & get_m_oVWs(void){return m_oVWs;};
       std::vector<FMatrix_ptr> & get_m_oPs(void){return m_oPs;};
+
+      void      train(const Slices_t & train_x, const Slices_t & train_y, double val_x = 0, double val_y = 0);
+
+      void      train(const Slices_t & train_x, const Slices_t & train_y);
+      void      nnff(const Slices_t & x, const Slices_t & y);
 
       protected:
         

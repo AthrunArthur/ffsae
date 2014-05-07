@@ -36,6 +36,12 @@ namespace ff
       FMatrix res(m, n, 0.0);
       return res;
     }
+
+    FMatrix     ones(int m, int n)
+    {
+      FMatrix res(m, n, 1.0);
+      return res;
+    }
     ///TODO : performance issue here, we should use lazy evaluation here!
     template<class T>
     FMatrix add(const FMatrix & m, T && v)
