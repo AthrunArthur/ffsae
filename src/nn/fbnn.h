@@ -20,18 +20,21 @@ namespace ff
       {
         for(int i = 1; i < m_iN; ++i)
         {
-          FMatrix f = rand(m_oArch[i], m_oArch[i-1] + 1) -0.5 * 2 * 4 * sqrt(6/(m_oArch[i] + m_oArch[i-1]));
+          FMatrix f = (rand(m_oArch[i], m_oArch[i-1] + 1) - 0.5) * 2 * 4 * sqrt(6/(m_oArch[i] + m_oArch[i-1]));//based on nnsetup.m
           m_oWs.push_back(std::make_shared<FMatrix>(f));
           FMatrix z = zeros(f.rows(), f.columns());
           m_oVWs.push_back(std::make_shared<FMatrix>(z));
           FMatrix p = zeros(1, m_oArch[i]);
           m_oPs.push_back(std::make_shared<FMatrix>(p));
-
         }
         
       }
       FBNN(const FBNN & p) = delete;
       FBNN & operator =(const FBNN & p) = delete;
+      
+      std::vector<FMatrix_ptr> & get_m_oWs(void){return m_oWs;};
+      std::vector<FMatrix_ptr> & get_m_oVWs(void){return m_oVWs;};
+      std::vector<FMatrix_ptr> & get_m_oPs(void){return m_oPs;};
 
       protected:
         
