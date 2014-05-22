@@ -4,31 +4,31 @@
 #ifndef FFSAE_SAE_SAE_H_
 #define FFSAE_SAE_SAE_H_
 #include "common/common.h"
-#include "utils/matlib.h"
 #include "nn/fbnn.h"
-#include "dsource/Slice.h"
 
 namespace ff
 {
   class SAE
   {
     public:
-        SAE(const FMatrix & m)
-          : m_strActivationFunction("sigm")
-          , m_fLearningRate(1)
-          , m_fInputZeroMaskedFraction(0.5)
-        {
-          for(size_t i = 1; i < numel(m); ++i)
-          {
-            Arch_t t;
-            t[0] = m(0, i-1);
-            t[1] = m(0, i);
-            t[2] = m(0, i-1);
-            m_oAEs.push_back(std::make_shared<FBNN>(t));
-          }
-        }
+        SAE(const Arch_t & arch);
+//           : m_strActivationFunction("sigm")
+//           , m_fLearningRate(1)
+//           , m_fInputZeroMaskedFraction(0.5)
+//         {
+// 	  std::cout << "SAE initialize!" << std::endl;
+//           for(size_t i = 1; i < numel(arch); ++i)
+//           {
+//             Arch_t t(3UL);
+//             t[0] = arch[i-1];
+//             t[1] = arch[i];
+//             t[2] = arch[i-1];
+//             m_oAEs.push_back(std::make_shared<FBNN>(t,m_strActivationFunction,m_fLearningRate,m_fInputZeroMaskedFraction));
+//           }
+//           std::cout << "Finish initialize!" << std::endl;
+//         }
 
-        void    SAETrain(const Slices_t & trains);
+        void    SAETrain(FMatrix & train_x);
 	std::vector<FBNN_ptr> & get_m_oAEs(void){return m_oAEs;};
 
     protected:

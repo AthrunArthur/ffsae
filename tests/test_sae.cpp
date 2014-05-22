@@ -1,4 +1,5 @@
 #include "sae/sae.h"
+#include "dsource/read.h"
 
 using namespace ff;
 
@@ -8,10 +9,10 @@ int main(int argc, char *argv[])
 //     m(0, 0) = 784;
 //     m(0, 1) = 100;
     
-    ff::FMatrix m(1, 3);
-    m(0, 0) = 784;
-    m(0, 1) = 100;
-    m(0, 2) = 10;
+    ff::Arch_t m(3UL);
+    m[0] = 784;
+    m[1] = 100;
+    m[2] = 10;
     
     std::cout << "m = " << m << std::endl; 
     std::cout << "numel(m) = " << numel(m) << std::endl;
@@ -30,6 +31,10 @@ int main(int argc, char *argv[])
 	  std::cout << "P[" << j << "] = {" << m_oPs[j]->rows() << ", " << m_oPs[j]->columns() << "}" << std::endl;
 	}
     }
+    
+    TData d = read_data();
+//     s.SAETrain(*d.train_x);
+    s.SAETrain(FMatrix());
 
     return 0;
 }

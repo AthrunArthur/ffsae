@@ -8,7 +8,7 @@ int main(int argc, const char *argv[])
   for(auto pss : s)
   {
     ff::Slice & ss = *(pss.get());
-       int dim = static_cast<int>(sqrt(ss.len()));
+       int dim = static_cast<int>(sqrt(ss.len()));//28*28 = 784
        std::cout<<"ss len() : "<<ss.len()<<std::endl;
        std::cout<<"************************* "<<ss.num()<<std::endl;
       for(int i = 0; i < dim; ++i)
