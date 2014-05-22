@@ -15,25 +15,6 @@ namespace ff
   class FBNN{
     public:
       FBNN(const Arch_t & arch, std::string activeStr = "tanh_opt", int learningRate = 2, double zeroMaskedFraction = 0, bool testing = false, std::string outputStr = "sigm");
-//        : m_oArch(arch)
-//          , m_iN(numel(arch))
-//          , m_strActivationFunction(activeStr)         
-// 	 , m_iLearningRate(learningRate)
-// 	 , m_fInputZeroMaskedFraction(zeroMaskedFraction)
-// 	 , m_fTesting(testing)
-// 	 , m_strOutput(outputStr)	 
-//       {
-//         for(int i = 1; i < m_iN; ++i)
-//         {
-//           FMatrix f = (rand(m_oArch[i], m_oArch[i-1] + 1) - 0.5) * (2 * 4 * sqrt(6/(m_oArch[i] + m_oArch[i-1])));//based on nnsetup.m
-//           m_oWs.push_back(std::make_shared<FMatrix>(f));
-//           FMatrix z = zeros(f.rows(), f.columns());
-//           m_oVWs.push_back(std::make_shared<FMatrix>(z));
-//           FMatrix p = zeros(1, m_oArch[i]);
-//           m_oPs.push_back(std::make_shared<FMatrix>(p));
-//         }
-//         
-//       }
       FBNN(const FBNN & p) = delete;
       FBNN & operator =(const FBNN & p) = delete;
       

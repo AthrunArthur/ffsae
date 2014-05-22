@@ -9,9 +9,9 @@ int main(int argc, char *argv[])
     srand(time(NULL));
     
     //randperm
-    std::cout << "randperm(50) =";
+    std::cout << "randperm(60000) =";
     std::vector<int> iVector;
-    randperm(50,iVector);
+    randperm(60000,iVector);
     for(std::vector<int>::iterator it=iVector.begin(); it!=iVector.end(); ++it)
 	std::cout << ' ' << *it;
       std::cout << std::endl;  
@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
     std::cout << "m1 = \n" << m1 << std::endl;
     std::cout << "m * m1 = \n" << m * m1 << std::endl;
     std::cout << "m * 2 = \n" << m * 2 << std::endl;
+    std::cout << "mul(m,2) = \n" << mul(m,2) << std::endl;
     
     //matrix trans
     std::cout << "trans(m) = \n" << trans(m) << std::endl;
@@ -53,7 +54,6 @@ int main(int argc, char *argv[])
     
     //matrix add
     std::cout << "m2 + m = \n" << m2 + m << std::endl;
-    std::cout << "m2 + empty = \n" << m2 + FMatrix() << std::endl;
     
     //matrix div
     std::cout << "m2 / 1 = \n" << m2 / 1 << std::endl;

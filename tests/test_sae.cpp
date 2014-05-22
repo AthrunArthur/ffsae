@@ -9,14 +9,14 @@ int main(int argc, char *argv[])
 //     m(0, 0) = 784;
 //     m(0, 1) = 100;
     
-    ff::Arch_t m(3UL);
-    m[0] = 784;
-    m[1] = 100;
-    m[2] = 10;
+    ff::Arch_t c(3UL);
+    c[0] = 784;
+    c[1] = 100;
+    c[2] = 10;
     
-    std::cout << "m = " << m << std::endl; 
-    std::cout << "numel(m) = " << numel(m) << std::endl;
-    ff::SAE s(m);
+    std::cout << "c = " << c << std::endl; 
+    std::cout << "numel(c) = " << numel(c) << std::endl;
+    ff::SAE s(c);
     //need check if s is correct!!!
     std::vector<FBNN_ptr> & m_oAEs = s.get_m_oAEs();
     for(int i = 0; i < m_oAEs.size(); i++)
@@ -33,8 +33,11 @@ int main(int argc, char *argv[])
     }
     
     TData d = read_data();
-//     s.SAETrain(*d.train_x);
-    s.SAETrain(FMatrix());
+//     ff::FMatrix train_x = submatrix(*d.train_x,0UL,0UL,opts::batchsize * 6,d.train_x->columns());
+//     std::cout << "train_x size = (" << train_x.rows() << ", " << train_x.columns() << ")" << std::endl;
+    s.SAETrain(*d.train_x);
+//     ff::FMatrix m;
+//     s.SAETrain(m);
 
     return 0;
 }
