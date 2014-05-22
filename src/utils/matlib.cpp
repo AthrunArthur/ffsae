@@ -38,7 +38,7 @@ namespace ff
       return res;
     }
     
-    FMatrix add(const FMatrix & m, const FMatrix & m1)
+    FMatrix add(const FMatrix & m, const FMatrix & m1)//used for m + empty. Need to be deleted after correcting calls from fbnn.cpp
     {
 	if(m.rows() == 0)
 	  return m1;
@@ -48,20 +48,6 @@ namespace ff
 	res += m1;
         return res;
     }    
-    
-    FMatrix sub(const FMatrix & m, const FMatrix & m1)
-    {
-	FMatrix res = m;
-	res -= m1;
-        return res;
-    }
-    
-    FMatrix     mul(const FMatrix & m, const FMatrix & m1 )
-    {
-	FMatrix res = m;
-	res *= m1;
-	return res;
-    }
     
     ////////////////
     FMatrix trans(const FMatrix & m)
@@ -191,18 +177,8 @@ namespace ff
     
 };//end namespace ff    
 
-    ff::FMatrix operator + (const ff::FMatrix & t1, const ff::FMatrix & t )
+    ff::FMatrix operator + (const ff::FMatrix & t1, const ff::FMatrix & t )//used for m + empty. Need to be deleted after correcting calls from fbnn.cpp
     {
       return ff::add(t1, t);
-    }
-        
-    ff::FMatrix operator - (const ff::FMatrix & t1, const ff::FMatrix & t )
-    {
-      return ff::sub(t1, t);
-    }
-    
-    ff::FMatrix operator * (const ff::FMatrix & t1, const ff::FMatrix & t )
-    {
-      return ff::mul(t1, t);
     }
     
