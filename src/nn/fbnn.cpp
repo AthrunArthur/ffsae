@@ -3,6 +3,12 @@
 
 namespace ff
 {
+      const double      FBNN::m_fMomentum = 0.5;
+      const double      FBNN::m_fScalingLearningRate= 1;
+      const double      FBNN::m_fWeithtPenaltyL2 = 0;
+      const double      FBNN::m_fNonSparsityPenalty = 0;
+      const double      FBNN::m_fSparsityTarget = 0.05;
+      const double      FBNN::m_fDropoutFraction = 0;
   FBNN::FBNN(const Arch_t & arch, std::string activeStr, int learningRate, double zeroMaskedFraction, bool testing, std::string outputStr)
       : m_oArch(arch)
       , m_iN(numel(arch))
@@ -27,25 +33,25 @@ namespace ff
   //trains a neural net
   void FBNN::train(const FMatrix& train_x, const FMatrix& train_y, const FMatrix& valid_x, const FMatrix& valid_y)
   {
-      int ibatchNum = train_x.rows() / opts.batchsize + (train_x.rows() % opts.batchsize != 0);
-      FMatrix L = zeros(opts.numpochs * ibatchNum, 1);
+      int ibatchNum = train_x.rows() / opts::batchsize + (train_x.rows() % opts::batchsize != 0);
+      FMatrix L = zeros(opts::numpochs * ibatchNum, 1);
       m_oLp = std::make_shared<FMatrix>(L);
       std::chrono::time_point<std::chrono::system_clock> start, end;
       int elapsedTime;
       Loss loss;
-      for(int i = 0; i < opts.numpochs; ++i)
+      for(int i = 0; i < opts::numpochs; ++i)
       {
 	  start = std::chrono::system_clock::now();
 	  std::vector<int> iRandVec;
 	  randperm(train_x.rows(),iRandVec);
 	  for(int j = 0; j < ibatchNum; ++j)
 	  {
-	      int curBatchSize = opts.batchsize;
-	      if(j = ibatchNum - 1 && train_x.rows() % opts.batchsize != 0)
-		  curBatchSize = train_x.rows() % opts.batchsize;
+	      int curBatchSize = opts::batchsize;
+	      if(j = ibatchNum - 1 && train_x.rows() % opts::batchsize != 0)
+		  curBatchSize = train_x.rows() % opts::batchsize;
 	      FMatrix batch_x(curBatchSize,train_x.columns());
 	      for(int r = 0; r < curBatchSize; ++r)
-		  row(batch_x,r) = row(train_x,iRandVec[j * opts.batchsize + r]);
+		  row(batch_x,r) = row(train_x,iRandVec[j * opts::batchsize + r]);
 
 	      //Add noise to input (for use in denoising autoencoder)
 	      if(m_fInputZeroMaskedFraction != 0)
@@ -53,7 +59,7 @@ namespace ff
 
 	      FMatrix batch_y(curBatchSize,train_y.columns());
 	      for(int r = 0; r < curBatchSize; ++r)
-		  row(batch_y,r) = row(train_y,iRandVec[j * opts.batchsize + r]);
+		  row(batch_y,r) = row(train_y,iRandVec[j * opts::batchsize + r]);
 	      
 	      L(i*ibatchNum+j,0) = nnff(batch_x,batch_y);
 	      nnbp();
@@ -71,7 +77,7 @@ namespace ff
 	    nneval(loss, train_x, train_y, valid_x, valid_y);
 	    std::cout << "Full-batch train mse = " << loss.train_error.back() << std::endl;
 	  }
-	  std::cout << "epoch " << i << " / " <<  opts.numpochs << " took " << elapsedTime << " seconds." << std::endl;
+	  std::cout << "epoch " << i << " / " <<  opts::numpochs << " took " << elapsedTime << " seconds." << std::endl;
 	  std::cout << "Mini-batch mean squared error on training set is " << columnMean(submatrix(L,0UL,i*ibatchNum,1UL,ibatchNum)) << std::endl;      
 	  m_iLearningRate *= m_fScalingLearningRate;    
       }

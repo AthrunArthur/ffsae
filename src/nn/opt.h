@@ -5,11 +5,11 @@
 
 namespace ff
 {
-  struct 
+  struct opts
   {
-    constexpr static int numpochs = 1;
-    constexpr static int batchsize = 100;
-  } opts;
+    constexpr static const int numpochs = 1;
+    constexpr static const int batchsize = 100;
+  } ;
 }
 
 #endif

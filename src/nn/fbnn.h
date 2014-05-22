@@ -60,14 +60,14 @@ namespace ff
       std::string       m_strActivationFunction;
       int         m_iLearningRate;//shall be changed during train()
 //       static constexpr int         m_iLearningRate=2;
-      static constexpr double      m_fMomentum = 0.5;
-      static constexpr double      m_fScalingLearningRate= 1;
-      static constexpr double      m_fWeithtPenaltyL2 = 0;
-      static constexpr double      m_fNonSparsityPenalty = 0;
-      static constexpr double      m_fSparsityTarget = 0.05;
+      static const double      m_fMomentum;
+      static const double      m_fScalingLearningRate;
+      static const double      m_fWeithtPenaltyL2;
+      static const double      m_fNonSparsityPenalty;
+      static const double      m_fSparsityTarget;
       double      m_fInputZeroMaskedFraction;
 //       static constexpr double      m_fInputZeroMaskedFraction = 0;
-      static constexpr double      m_fDropoutFraction = 0;
+      static const double      m_fDropoutFraction;
 //       static constexpr double      m_fTesting = 0;
       bool      m_fTesting;
       std::string m_strOutput;
