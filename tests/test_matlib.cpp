@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
     std::cout << "m1 = \n" << m1 << std::endl;
     std::cout << "m * m1 = \n" << m * m1 << std::endl;
     std::cout << "m * 2 = \n" << m * 2 << std::endl;
+    std::cout << "mul(m,2) = \n" << mul(m,2) << std::endl;
     
     //matrix trans
     std::cout << "trans(m) = \n" << trans(m) << std::endl;
@@ -53,7 +54,7 @@ int main(int argc, char *argv[])
     
     //matrix add
     std::cout << "m2 + m = \n" << m2 + m << std::endl;
-    std::cout << "m2 + empty = \n" << m2 + FMatrix() << std::endl;
+    std::cout << "m2 + empty = \n" << m2 + FMatrix() << std::endl;//Need to be deleted after correcting calls from fbnn.cpp
     
     //matrix div
     std::cout << "m2 / 1 = \n" << m2 / 1 << std::endl;
