@@ -29,6 +29,7 @@ namespace ff
         }
 
         void    SAETrain(const Slices_t & trains);
+	std::vector<FBNN_ptr> & get_m_oAEs(void){return m_oAEs;};
 
     protected:
         std::vector<FBNN_ptr>        m_oAEs;
