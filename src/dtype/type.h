@@ -2,13 +2,17 @@
 #define FFSAE_DTYPE_TYPE_H_
 
 #include <blaze/Math.h>
+// #include <blaze/math/DenseRow.h>
+// #include <blaze/math/DenseColumn.h>
+// #include <blaze/math/DenseSubmatrix.h>
 #include <memory>
 
 namespace ff
 {
   typedef blaze::DynamicMatrix<double, blaze::rowMajor> FMatrix;
   typedef std::shared_ptr<FMatrix> FMatrix_ptr;
-
+  typedef blaze::DynamicVector<int, blaze::columnVector> FColumn;
+  
   template <class T>
   struct is_matrix{const static bool value=false;};
 

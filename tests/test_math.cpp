@@ -1,6 +1,5 @@
 #include "utils/math.h"
 #include <time.h>
-#include <cstdlib>
 
 using namespace ff;
 
@@ -40,6 +39,6 @@ int main(int argc, char *argv[])
     std::cout << "tanh_opt(5) = " << tanh_opt(5) << std::endl;
     //tanh_opt(FMatrix)
     std::cout << "tanh_opt(m) = \n" << tanh_opt(m) << std::endl;
-
+    
     return 0;
 }

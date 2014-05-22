@@ -8,5 +8,7 @@
 #include <memory>
 #include <cassert>
 #include <type_traits>
+#include <chrono>//used by fbnn.h
+#include <cstdlib>//used by matlib.h
 
 #endif
