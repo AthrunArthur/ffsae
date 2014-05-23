@@ -7,7 +7,7 @@ namespace ff
       , m_fLearningRate(1)
       , m_fInputZeroMaskedFraction(0.5)
   {
-      std::cout << "SAE initialize!" << std::endl;
+//       std::cout << "SAE initialize!" << std::endl;
       for(size_t i = 1; i < numel(arch); ++i)
       {
 	  Arch_t t(3UL);
@@ -16,12 +16,12 @@ namespace ff
 	  t[2] = arch[i-1];
 	  m_oAEs.push_back(std::make_shared<FBNN>(t,m_strActivationFunction,m_fLearningRate,m_fInputZeroMaskedFraction));
       }
-      std::cout << "Finish initialize!" << std::endl;
+//       std::cout << "Finish initialize!" << std::endl;
   }
-  void SAE::SAETrain(FMatrix & train_x)
+  void SAE::SAETrain(const FMatrix & train_x)
   {
       size_t num_ae = m_oAEs.size();
-      FMatrix & x = train_x;
+      FMatrix x = train_x;
       for( size_t i = 0; i < num_ae; ++i)
       {
 	std::cout << "Training AE " << i+1 << " / " << num_ae << std::endl;
