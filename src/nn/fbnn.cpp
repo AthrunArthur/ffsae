@@ -75,7 +75,7 @@ namespace ff
 	  std::cout << "elapsed time: " << elapsedTime << "s" << std::endl;
 	  //loss calculate use nneval
 	  if(valid_x.rows() == 0 || valid_y.rows() == 0){
-	    nneval(loss, train_x, train_y);//这里会整体输入全部x y，导致机器卡死，不要随便测试，先查看之前的结果是否正确
+	    nneval(loss, train_x, train_y);
 	    std::cout << "Full-batch train mse = " << loss.train_error.back() << std::endl;
 	  }
 	  else{
@@ -325,7 +325,7 @@ namespace ff
     FColumn expected = rowMaxIndexes(y);
     std::vector<int> bad = findUnequalIndexes(labels,expected);
 //     std::cout << "end nntest" << std::endl;
-    return bad.size() / x.rows();//Haven't return bad vector.(nntest.m does)
+    return double(bad.size()) / x.rows();//Haven't return bad vector.(nntest.m does)
   }
   
   void ff::FBNN::nnpredict(const FMatrix& x, const FMatrix& y, FColumn& labels)
