@@ -4,7 +4,7 @@
 namespace ff
 {
       const double      FBNN::m_fMomentum = 0.5;
-      const double      FBNN::m_fScalingLearningRate= 1;
+      const double      FBNN::m_fScalingLearningRate= 0.9;//1
       const double      FBNN::m_fWeithtPenaltyL2 = 0;
       const double      FBNN::m_fNonSparsityPenalty = 0;
       const double      FBNN::m_fSparsityTarget = 0.05;
@@ -20,7 +20,7 @@ namespace ff
   {
       for(int i = 1; i < m_iN; ++i)
       {
-	  FMatrix f = (rand(m_oArch[i], m_oArch[i-1] + 1) - 0.5) * (2 * 4 * sqrt(6/(m_oArch[i] + m_oArch[i-1])));//based on nnsetup.m
+ 	  FMatrix f = (rand(m_oArch[i], m_oArch[i-1] + 1) - 0.5) * (2 * 4 * sqrt(6.0/(m_oArch[i] + m_oArch[i-1])));//based on nnsetup.m
 	  m_oWs.push_back(std::make_shared<FMatrix>(f));
 	  FMatrix z = zeros(f.rows(), f.columns());
 	  m_oVWs.push_back(std::make_shared<FMatrix>(z));
@@ -31,15 +31,16 @@ namespace ff
   }
   
   //trains a neural net
-  void FBNN::train(const FMatrix & train_x, const FMatrix & train_y, const FMatrix & valid_x, const FMatrix & valid_y)
+  void FBNN::train(const FMatrix & train_x, const FMatrix & train_y, const Opts & opts, const FMatrix & valid_x, const FMatrix & valid_y)
   {
-      int ibatchNum = train_x.rows() / opts::batchsize + (train_x.rows() % opts::batchsize != 0);
-      FMatrix L = zeros(opts::numpochs * ibatchNum, 1);
+      int ibatchNum = train_x.rows() / opts.batchsize + (train_x.rows() % opts.batchsize != 0);
+      FMatrix L = zeros(opts.numpochs * ibatchNum, 1);
       m_oLp = std::make_shared<FMatrix>(L);
       std::chrono::time_point<std::chrono::system_clock> start, end;
       int elapsedTime;
       Loss loss;
-      for(int i = 0; i < opts::numpochs; ++i)
+//       std::cout << "numpochs = " << opts.numpochs << std::endl;
+      for(int i = 0; i < opts.numpochs; ++i)
       {
 	  std::cout << "start numpochs " << i << std::endl;
 	  start = std::chrono::system_clock::now();
@@ -49,12 +50,12 @@ namespace ff
 	  for(int j = 0; j < ibatchNum; ++j)
 	  {
 	      std::cout << " " << j;
-	      int curBatchSize = opts::batchsize;
-	      if(j == ibatchNum - 1 && train_x.rows() % opts::batchsize != 0)
-		  curBatchSize = train_x.rows() % opts::batchsize;
+	      int curBatchSize = opts.batchsize;
+	      if(j == ibatchNum - 1 && train_x.rows() % opts.batchsize != 0)
+		  curBatchSize = train_x.rows() % opts.batchsize;
 	      FMatrix batch_x(curBatchSize,train_x.columns());
 	      for(int r = 0; r < curBatchSize; ++r)//randperm()
-		  row(batch_x,r) = row(train_x,iRandVec[j * opts::batchsize + r]);
+		  row(batch_x,r) = row(train_x,iRandVec[j * opts.batchsize + r]);
 
 	      //Add noise to input (for use in denoising autoencoder)
 	      if(m_fInputZeroMaskedFraction != 0)
@@ -62,7 +63,7 @@ namespace ff
 
 	      FMatrix batch_y(curBatchSize,train_y.columns());
 	      for(int r = 0; r < curBatchSize; ++r)//randperm()
-		  row(batch_y,r) = row(train_y,iRandVec[j * opts::batchsize + r]);
+		  row(batch_y,r) = row(train_y,iRandVec[j * opts.batchsize + r]);
 	      
 	      L(i*ibatchNum+j,0) = nnff(batch_x,batch_y);
 	      nnbp();
@@ -82,7 +83,7 @@ namespace ff
 	    nneval(loss, train_x, train_y, valid_x, valid_y);
 	    std::cout << "Full-batch train mse = " << loss.train_error.back() << " , val mse = " << loss.valid_error.back() << std::endl;
 	  }
-	  std::cout << "epoch " << i+1 << " / " <<  opts::numpochs << " took " << elapsedTime << " seconds." << std::endl;
+	  std::cout << "epoch " << i+1 << " / " <<  opts.numpochs << " took " << elapsedTime << " seconds." << std::endl;
 	  std::cout << "Mini-batch mean squared error on training set is " << columnMean(submatrix(L,i*ibatchNum,0UL,ibatchNum,L.columns())) << std::endl;      
 	  m_iLearningRate *= m_fScalingLearningRate;    
 	  
@@ -90,10 +91,10 @@ namespace ff
       }
 
   }
-  void FBNN::train(const FMatrix & train_x, const FMatrix & train_y)
+  void FBNN::train(const FMatrix & train_x, const FMatrix & train_y, const Opts & opts)
   {
       FMatrix emptyM;
-      train(train_x,train_y,emptyM,emptyM);      
+      train(train_x,train_y,opts,emptyM,emptyM);      
   }
   
   //NNFF performs a feedforward pass
@@ -115,6 +116,7 @@ namespace ff
                 m_odOMs.push_back(std::make_shared<FMatrix>(FMatrix()));
         }
     }
+    
 //     std::cout << "start feedforward" << std::endl;
     //feedforward pass
     for(int i = 1; i < m_iN - 1; ++i)

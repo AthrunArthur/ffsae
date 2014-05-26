@@ -12,7 +12,7 @@ namespace ff
   {
     public:
         SAE(const Arch_t & arch);
-        void    SAETrain(const FMatrix & train_x);
+        void    SAETrain(const FMatrix & train_x, const Opts & opts);
 	std::vector<FBNN_ptr> & get_m_oAEs(void){return m_oAEs;};
 
     protected:

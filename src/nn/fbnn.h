@@ -23,9 +23,9 @@ namespace ff
       std::vector<FMatrix_ptr> & get_m_oPs(void){return m_oPs;};
       std::vector<FMatrix_ptr> & get_m_oAs(void){return m_oAs;};
 
-      void      train(const FMatrix & train_x, const FMatrix & train_y, const FMatrix & valid_x, const FMatrix & valid_y);
+      void      train(const FMatrix & train_x, const FMatrix & train_y, const Opts & opts, const FMatrix & valid_x, const FMatrix & valid_y);
 
-      void      train(const FMatrix & train_x, const FMatrix & train_y);
+      void      train(const FMatrix & train_x, const FMatrix & train_y , const Opts & opts);
       double    nnff(const FMatrix & x, const FMatrix & y);
       void      nnbp(void);
       void	nnapplygrads(void);
