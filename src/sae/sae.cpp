@@ -4,10 +4,10 @@ namespace ff
 {
   SAE::SAE(const Arch_t & arch)
       : m_strActivationFunction("sigm")
-      , m_fLearningRate(1)
+      , m_fLearningRate(1)//0.1
       , m_fInputZeroMaskedFraction(0.5)
   {
-      std::cout << "SAE initialize!" << std::endl;
+//       std::cout << "SAE initialize!" << std::endl;
       for(size_t i = 1; i < numel(arch); ++i)
       {
 	  Arch_t t(3UL);
@@ -16,19 +16,22 @@ namespace ff
 	  t[2] = arch[i-1];
 	  m_oAEs.push_back(std::make_shared<FBNN>(t,m_strActivationFunction,m_fLearningRate,m_fInputZeroMaskedFraction));
       }
-      std::cout << "Finish initialize!" << std::endl;
+//       std::cout << "Finish initialize!" << std::endl;
   }
-  void SAE::SAETrain(FMatrix & train_x)
+  void SAE::SAETrain(const FMatrix & train_x, const Opts & opts)
   {
       size_t num_ae = m_oAEs.size();
-      FMatrix & x = train_x;
+      FMatrix x = train_x;
       for( size_t i = 0; i < num_ae; ++i)
       {
-	std::cout << "Training AE " << i+1 << " / " << num_ae << std::endl;
-        m_oAEs[i]->train(x, x);
+	std::cout << "Training AE " << i+1 << " / " << num_ae << ", ";
+	std::cout << "x = (" << x.rows() << ", " << x.columns() << ")"<< std::endl;
+        m_oAEs[i]->train(x, x, opts);
         m_oAEs[i]->nnff(x, x);
 	x = *(m_oAEs[i]->get_m_oAs())[1];
 	x = delPreColumn(x);
+	
+	
       } 
   }
 }//end namespace ff
