@@ -4,7 +4,7 @@ namespace ff
 {
   SAE::SAE(const Arch_t & arch)
       : m_strActivationFunction("sigm")
-      , m_fLearningRate(0.1)
+      , m_fLearningRate(1)//0.1
       , m_fInputZeroMaskedFraction(0.5)
   {
 //       std::cout << "SAE initialize!" << std::endl;

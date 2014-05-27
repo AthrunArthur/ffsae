@@ -126,11 +126,11 @@ namespace ff
       if(m_strActivationFunction == "sigm")
       {	
 	//Calculate the unit's outputs (including the bias term)
-	*m_oAs[i] = sigm((*m_oAs[i-1]) * trans(*m_oWs[i-1]));
+	*m_oAs[i] = sigm((*m_oAs[i-1]) * blaze::trans(*m_oWs[i-1]));
       }
       else if(m_strActivationFunction == "tanh_opt")
       {
-	*m_oAs[i] = tanh_opt((*m_oAs[i-1]) * trans(*m_oWs[i-1]));
+	*m_oAs[i] = tanh_opt((*m_oAs[i-1]) * blaze::trans(*m_oWs[i-1]));
       }
       
 //       std::cout << "dropout" << std::endl;
@@ -159,15 +159,15 @@ namespace ff
 //     std::cout << "start calculate output" << std::endl;
     if(m_strOutput == "sigm")
     {
-      *m_oAs[m_iN -1] = sigm((*m_oAs[m_iN-2]) * trans(*m_oWs[m_iN-2]));
+      *m_oAs[m_iN -1] = sigm((*m_oAs[m_iN-2]) * blaze::trans(*m_oWs[m_iN-2]));
     }
     else if(m_strOutput == "linear")
     {
-      *m_oAs[m_iN -1] = (*m_oAs[m_iN-2]) * trans(*m_oWs[m_iN-2]);
+      *m_oAs[m_iN -1] = (*m_oAs[m_iN-2]) * blaze::trans(*m_oWs[m_iN-2]);
     }
     else if(m_strOutput == "softmax")
     {
-      *m_oAs[m_iN -1] = softmax((*m_oAs[m_iN-2]) * trans(*m_oWs[m_iN-2]));
+      *m_oAs[m_iN -1] = softmax((*m_oAs[m_iN-2]) * blaze::trans(*m_oWs[m_iN-2]));
     }
     
 //     std::cout << "start error and loss" << std::endl;
