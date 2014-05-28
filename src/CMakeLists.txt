@@ -6,6 +6,7 @@ set(src dsource/Slice.cpp
   sae/sae.cpp
   utils/math.cpp
   utils/matlib.cpp
+  utils/utils.cpp
   nn/arch.cpp)
 
 ADD_LIBRARY(ffsae SHARED ${src})
