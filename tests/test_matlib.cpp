@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
     std::cout << "m2 + m = \n" << m2 + m << std::endl;
     
     //matrix div
-    std::cout << "m2 / 1 = \n" << m2 / 1 << std::endl;
-    std::cout << "1 / m2 = \n" << 1 / m2 << std::endl;
+    std::cout << "m2 / 2 = \n" << m2 / 2 << std::endl;
+//     std::cout << "2 / m2 = \n" << 2 / m2 << std::endl;
     
     
     //columnMean

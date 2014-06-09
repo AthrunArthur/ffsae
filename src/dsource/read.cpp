@@ -25,6 +25,7 @@ namespace ff
         res->operator()(k, i) = static_cast<double>(pData[rows * i + k]);
       }
     }
+    Mat_VarFree(tvar);
     return res;
   }
   TData         read_data()
@@ -35,7 +36,7 @@ namespace ff
     scope_guard _l([&mat, fileName](){
       mat = Mat_Open(fileName, MAT_ACC_RDONLY);
       },
-    [&mat](){Mat_Close(mat); });
+    [&mat](){Mat_Close(mat);});
     if(!mat){
       std::cout <<"cannot open "<<fileName<<std::endl;
       return res;
@@ -66,6 +67,7 @@ namespace ff
       else{
         //nothing here, just for fun...
       }
+      Mat_VarFree(var);
     }
     if(read_items != 4)
     {

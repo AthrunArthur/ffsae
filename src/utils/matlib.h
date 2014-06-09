@@ -196,24 +196,24 @@ namespace ff
       return ff::sub(t1, t);
     }
     
-    /////////////////
-    template <class T>
-    typename std::enable_if<std::is_arithmetic<T>::value, ff::FMatrix>::type operator * (const ff::FMatrix & t1, const T & t)
-    {
-      return ff::mul(t1, t);
-    }
-    template <class T>
-    typename std::enable_if<std::is_arithmetic<T>::value, ff::FMatrix>::type operator * (const T & t1, const ff::FMatrix & t )
-    {
-      return ff::mul(t, t1);
-    }
+    ///////////////
+//     template <class T>
+//     typename std::enable_if<std::is_arithmetic<T>::value, ff::FMatrix>::type operator * (const ff::FMatrix & t1, const T & t)
+//     {
+//       return ff::mul(t1, t);
+//     }
+//     template <class T>
+//     typename std::enable_if<std::is_arithmetic<T>::value, ff::FMatrix>::type operator * (const T & t1, const ff::FMatrix & t )
+//     {
+//       return ff::mul(t, t1);
+//     }
     
     ////////////////
-    template <class T>
-    typename std::enable_if<std::is_arithmetic<T>::value, ff::FMatrix>::type operator / (const ff::FMatrix & t1, const T & t )
-    {
-      return ff::div(t1, t);
-    }
+//     template <class T>
+//     typename std::enable_if<std::is_arithmetic<T>::value, ff::FMatrix>::type operator / (const ff::FMatrix & t1, const T & t )
+//     {
+//       return ff::div(t1, t);
+//     }
     template <class T>
     typename std::enable_if<std::is_arithmetic<T>::value, ff::FMatrix>::type operator / (const T & t1, const ff::FMatrix & t )
     {
