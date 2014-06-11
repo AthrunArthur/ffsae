@@ -44,8 +44,10 @@ int main(int argc, char *argv[])
 	std::cout << "SAE[" << i << "]:" << std::endl;
 	for(int j = 0; j < m_oWs.size(); j++){
 	  std::cout << "W[" << j << "] = {" << m_oWs[j]->rows() << ", " << m_oWs[j]->columns() << "}" << std::endl;
-	  std::cout << "vW[" << j << "] = {" << m_oVWs[j]->rows() << ", " << m_oVWs[j]->columns() << "}" << std::endl;
-	  std::cout << "P[" << j << "] = {" << m_oPs[j]->rows() << ", " << m_oPs[j]->columns() << "}" << std::endl;
+	  if(!m_oVWs.empty())
+	    std::cout << "vW[" << j << "] = {" << m_oVWs[j]->rows() << ", " << m_oVWs[j]->columns() << "}" << std::endl;
+	  if(!m_oPs.empty())
+	    std::cout << "P[" << j << "] = {" << m_oPs[j]->rows() << ", " << m_oPs[j]->columns() << "}" << std::endl;
 	}
     }
     sae.SAETrain(*d.train_x,opts);
@@ -71,10 +73,17 @@ int main(int argc, char *argv[])
     std::vector<FMatrix_ptr> & m_oPs = nn.get_m_oPs();
     for(int j = 0; j < m_oWs.size(); j++) {
         std::cout << "W[" << j << "] = {" << m_oWs[j]->rows() << ", " << m_oWs[j]->columns() << "}" << std::endl;
-        std::cout << "vW[" << j << "] = {" << m_oVWs[j]->rows() << ", " << m_oVWs[j]->columns() << "}" << std::endl;
+	if(!m_oVWs.empty())
+	  std::cout << "vW[" << j << "] = {" << m_oVWs[j]->rows() << ", " << m_oVWs[j]->columns() << "}" << std::endl;
+	if(!m_oPs.empty())
         std::cout << "P[" << j << "] = {" << m_oPs[j]->rows() << ", " << m_oPs[j]->columns() << "}" << std::endl;
     }
-    *m_oWs[0] = *(m_oAEs[0]->get_m_oWs())[0];//nn.W{1} = sae.ae{1}.W{1};
+//     *m_oWs[0] = *(m_oAEs[0]->get_m_oWs())[0];//nn.W{1} = sae.ae{1}.W{1};
+    
+    for(int i = 0; i < m_oWs.size() - 1; i++)
+    {
+      *m_oWs[i] = *(m_oAEs[i]->get_m_oWs())[0];//nn.W{i} = sae.ae{i}.W{1};
+    }
     
 //     std::cout << "d.train_x = (" << d.train_x->rows() << "," << d.train_x->columns() << ")" << std::endl;
     

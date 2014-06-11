@@ -31,3 +31,5 @@ target_link_libraries(t_slice ${ffsae_libs})
 add_executable(t_perf test_perf.cpp)
 target_link_libraries(t_perf ${ffsae_libs} boost_system)
 
+add_executable(p_sae sae_para.cpp)
+target_link_libraries(p_sae ${ffsae_libs})

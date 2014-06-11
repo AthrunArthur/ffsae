@@ -22,16 +22,22 @@ namespace ff
       {
  	  FMatrix f = (rand(m_oArch[i], m_oArch[i-1] + 1) - 0.5) * (2 * 4 * sqrt(6.0/(m_oArch[i] + m_oArch[i-1])));//based on nnsetup.m
 	  m_oWs.push_back(std::make_shared<FMatrix>(f));
-	  FMatrix z = zeros(f.rows(), f.columns());
-	  m_oVWs.push_back(std::make_shared<FMatrix>(z));
-	  FMatrix p = zeros(1, m_oArch[i]);
-	  m_oPs.push_back(std::make_shared<FMatrix>(p));
+	  if(m_fMomentum > 0)
+	  {
+	    FMatrix z = zeros(f.rows(), f.columns());
+	    m_oVWs.push_back(std::make_shared<FMatrix>(z));
+	  }
+	  if(m_fNonSparsityPenalty > 0)
+	  {
+	    FMatrix p = zeros(1, m_oArch[i]);
+	    m_oPs.push_back(std::make_shared<FMatrix>(p));
+	  }
       }
 
   }
   
   //trains a neural net
-  void FBNN::train(const FMatrix & train_x, const FMatrix & train_y, const Opts & opts, const FMatrix & valid_x, const FMatrix & valid_y)
+  void FBNN::train(const FMatrix & train_x, const FMatrix & train_y, const Opts & opts, const FMatrix & valid_x, const FMatrix & valid_y, const FBNN_ptr pFBNN)
   {
       int ibatchNum = train_x.rows() / opts.batchsize + (train_x.rows() % opts.batchsize != 0);
       FMatrix L = zeros(opts.numpochs * ibatchNum, 1);
@@ -50,6 +56,12 @@ namespace ff
 	  for(int j = 0; j < ibatchNum; ++j)
 	  {
 	      std::cout << " " << j;
+	      if(pFBNN)//pull
+	      {
+		set_m_oWs(pFBNN->get_m_oWs());
+		if(m_fMomentum > 0)
+		  set_m_oVWs(pFBNN->get_m_oVWs());
+	      }
 	      int curBatchSize = opts.batchsize;
 	      if(j == ibatchNum - 1 && train_x.rows() % opts.batchsize != 0)
 		  curBatchSize = train_x.rows() % opts.batchsize;
@@ -68,6 +80,11 @@ namespace ff
 	      L(i*ibatchNum+j,0) = nnff(batch_x,batch_y);
 	      nnbp();
 	      nnapplygrads();
+	      if(pFBNN)//push
+	      {
+		pFBNN->set_m_odWs(m_odWs);
+		pFBNN->nnapplygrads();
+	      }
 // 	      std::cout << "end batch " << j << std::endl;
 	  }
 	  std::cout << std::endl;
@@ -91,10 +108,10 @@ namespace ff
       }
 
   }
-  void FBNN::train(const FMatrix & train_x, const FMatrix & train_y, const Opts & opts)
+  void FBNN::train(const FMatrix & train_x, const FMatrix & train_y, const Opts & opts, const FBNN_ptr pFBNN)
   {
       FMatrix emptyM;
-      train(train_x,train_y,opts,emptyM,emptyM);      
+      train(train_x,train_y,opts,emptyM,emptyM,pFBNN);      
   }
   
   //NNFF performs a feedforward pass

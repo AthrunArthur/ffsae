@@ -26,7 +26,9 @@ int main(int argc, char *argv[]) {
   DMatrix m(3,4,6);
   std::cout << "m=\n" << m << std::endl;
   
-  std::cout << m / 4 << std::endl;
+  DMatrix m1(m);
+  
+  std::cout << m1 / 4 << std::endl;
 //   std::cout << 3 / m << std::endl;//undefined
   
   return 0;
