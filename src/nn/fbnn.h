@@ -6,6 +6,7 @@
 #include "nn/opt.h"
 #include "utils/math.h"
 #include "nn/loss.h"
+#include "utils/utils.h"
 
 namespace ff
 {
