@@ -3,6 +3,8 @@
 #include <time.h>
 #include <memory>
 #include "nn/opt.h"
+//ff parallel
+#include "ff.h"
 
 #define PARAGRANULARITY 7
 
@@ -10,7 +12,12 @@ using namespace ff;
 
 int main(int argc, char *argv[])
 {
+    bool isPara = true;
     srand(time(NULL));
+//     int nThread = 1;
+//     if(isPara)
+//       nThread = tbb::task_scheduler_init::automatic;
+//     std::cout << "nThread = " << nThread << std::endl;
     TData d = read_data();
     *d.train_x = (*d.train_x) / 255;
     *d.test_x = (*d.test_x) / 255;   
@@ -70,21 +77,37 @@ int main(int argc, char *argv[])
           std::vector<FMatrix_ptr> & m_oVWs = m_oAEs[i]->get_m_oVWs();
           std::vector<FMatrix_ptr> & m_oPs = m_oAEs[i]->get_m_oPs();
           std::cout << "SAE[" << i << "]:" << std::endl;
-//           for(int j = 0; j < m_oWs.size(); j++) {
-//               std::cout << "W[" << j << "] = {" << m_oWs[j]->rows() << ", " << m_oWs[j]->columns() << "}" << std::endl;
-//               if(!m_oVWs.empty())
-// 		std::cout << "vW[" << j << "] = {" << m_oVWs[j]->rows() << ", " << m_oVWs[j]->columns() << "}" << std::endl;
-// 	      if(!m_oPs.empty())
-// 		std::cout << "P[" << j << "] = {" << m_oPs[j]->rows() << ", " << m_oPs[j]->columns() << "}" << std::endl;
-//           }
       }
       sae_pvec.push_back(std::make_shared<SAE>(sae));      
     }
-//     for(int i = 0; i < 2; i++)
-    for(int i = 0; i < PARAGRANULARITY; i++)
+    if(!isPara)
     {
-      sae_pvec[i]->SAETrain(*train_x_pvec[i],opts,std::make_shared<SAE>(sae_master));
-    }  
+        for(int i = 0; i < PARAGRANULARITY; i++)
+        {
+	    std::cout << "start train SAE " << i << std::endl;
+            sae_pvec[i]->SAETrain(*train_x_pvec[i],opts,std::make_shared<SAE>(sae_master));
+        }
+    }
+    else{    
+//         tbb::task_group tg;
+//         for(int i = 0; i < PARAGRANULARITY; i++)
+//         {
+//             tg.run([&sae_pvec,i,&train_x_pvec,&opts,&sae_master]() {
+//                 sae_pvec[i]->SAETrain(*train_x_pvec[i],opts,std::make_shared<SAE>(sae_master));
+//             });
+//         }
+//         tg.wait();   
+	ff::paragroup pg;
+        for(int i = 0; i < PARAGRANULARITY; i++)
+        {
+	    ff::para<void> p;
+            p([&sae_pvec,i,&train_x_pvec,&opts,&sae_master]() {
+                sae_pvec[i]->SAETrain(*train_x_pvec[i],opts,std::make_shared<SAE>(sae_master));
+            });
+	    pg.add(p);
+        }
+        ff_wait(all(pg));
+    }
        
     //Use the SDAE to initialize a FFNN
     std::cout << "Train an FFNN" << std::endl;

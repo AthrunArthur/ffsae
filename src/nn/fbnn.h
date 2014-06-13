@@ -7,6 +7,9 @@
 #include "utils/math.h"
 #include "nn/loss.h"
 #include "utils/utils.h"
+//mutex
+#include <boost/thread/locks.hpp>
+#include <boost/thread/shared_mutex.hpp>
 
 namespace ff
 {
@@ -14,6 +17,10 @@ namespace ff
    */
   class FBNN;
   typedef std::shared_ptr<FBNN> FBNN_ptr;
+  
+//   typedef tbb::spin_rw_mutex RWMutex;
+  typedef boost::shared_mutex RWMutex;
+  
   class FBNN{
     public:
       FBNN(const Arch_t & arch, std::string activeStr = "tanh_opt", int learningRate = 2, double zeroMaskedFraction = 0, bool testing = false, std::string outputStr = "sigm");
@@ -64,6 +71,8 @@ namespace ff
       double	nntest(const FMatrix & x, const FMatrix & y);
       void	nnpredict(const FMatrix & x, const FMatrix & y, FColumn & labels);
       
+      RWMutex W_RWMutex;//only needed in para & master -- How to avoid when unnecessary? public
+      
       protected:
         
       const Arch_t &    m_oArch;
@@ -94,7 +103,7 @@ namespace ff
       FMatrix_ptr  m_oLp;//Loss matrix
       FMatrix_ptr  m_oEp;//Error matrix
       
-
+      
     
   };//end class FBNN
 //   typedef std::shared_ptr<FBNN> FBNN_ptr;
