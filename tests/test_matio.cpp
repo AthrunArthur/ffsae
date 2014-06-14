@@ -15,8 +15,10 @@ int main(int argc, char *argv[]) {
         std::cout << "reading mat file..." << std::endl;
         matvar_t *var = 0;
         while((var = Mat_VarReadNextInfo(mat)) != NULL){
-            if (strcmp(var->name, "train_x") != 0)
-                continue;
+            if (strcmp(var->name, "train_x") != 0){
+		Mat_VarFree(var);
+		continue;
+	    }
             
             std::cout<<"name : " << var->name<<std::endl;
             matvar_t *matVar = Mat_VarRead(mat, var->name);
@@ -46,6 +48,8 @@ int main(int argc, char *argv[]) {
                     std::cout<<std::endl;
                 }
             }
+            Mat_VarFree(matVar);
+            Mat_VarFree(var);
         }
         std::cout << "closing mat file..." << std::endl;
         Mat_Close(mat);

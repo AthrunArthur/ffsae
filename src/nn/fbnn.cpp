@@ -22,57 +22,81 @@ namespace ff
       {
  	  FMatrix f = (rand(m_oArch[i], m_oArch[i-1] + 1) - 0.5) * (2 * 4 * sqrt(6.0/(m_oArch[i] + m_oArch[i-1])));//based on nnsetup.m
 	  m_oWs.push_back(std::make_shared<FMatrix>(f));
-	  FMatrix z = zeros(f.rows(), f.columns());
-	  m_oVWs.push_back(std::make_shared<FMatrix>(z));
-	  FMatrix p = zeros(1, m_oArch[i]);
-	  m_oPs.push_back(std::make_shared<FMatrix>(p));
+	  if(m_fMomentum > 0)
+	  {
+	    FMatrix z = zeros(f.rows(), f.columns());
+	    m_oVWs.push_back(std::make_shared<FMatrix>(z));
+	  }
+	  if(m_fNonSparsityPenalty > 0)
+	  {
+	    FMatrix p = zeros(1, m_oArch[i]);
+	    m_oPs.push_back(std::make_shared<FMatrix>(p));
+	  }
       }
 
   }
   
   //trains a neural net
-  void FBNN::train(const FMatrix & train_x, const FMatrix & train_y, const Opts & opts, const FMatrix & valid_x, const FMatrix & valid_y)
+  void FBNN::train(const FMatrix & train_x, const FMatrix & train_y, const Opts & opts, const FMatrix & valid_x, const FMatrix & valid_y, const FBNN_ptr pFBNN)
   {
       int ibatchNum = train_x.rows() / opts.batchsize + (train_x.rows() % opts.batchsize != 0);
       FMatrix L = zeros(opts.numpochs * ibatchNum, 1);
       m_oLp = std::make_shared<FMatrix>(L);
-      std::chrono::time_point<std::chrono::system_clock> start, end;
-      int elapsedTime;
       Loss loss;
 //       std::cout << "numpochs = " << opts.numpochs << std::endl;
       for(int i = 0; i < opts.numpochs; ++i)
       {
-	  std::cout << "start numpochs " << i << std::endl;
-	  start = std::chrono::system_clock::now();
-	  std::vector<int> iRandVec;
-	  randperm(train_x.rows(),iRandVec);
-	  std::cout << "start batch: ";
-	  for(int j = 0; j < ibatchNum; ++j)
-	  {
-	      std::cout << " " << j;
-	      int curBatchSize = opts.batchsize;
-	      if(j == ibatchNum - 1 && train_x.rows() % opts.batchsize != 0)
-		  curBatchSize = train_x.rows() % opts.batchsize;
-	      FMatrix batch_x(curBatchSize,train_x.columns());
-	      for(int r = 0; r < curBatchSize; ++r)//randperm()
-		  row(batch_x,r) = row(train_x,iRandVec[j * opts.batchsize + r]);
+	  std::cout << "start numpochs " << i << std::endl;	  
+	  int elapsedTime = count_elapse_second([&train_x,&train_y,&L,&opts,i,pFBNN,ibatchNum,this]{
+	    std::vector<int> iRandVec;
+            randperm(train_x.rows(),iRandVec);
+            std::cout << "start batch: ";
+            for(int j = 0; j < ibatchNum; ++j)
+            {
+                std::cout << " " << j;
+                if(pFBNN)//pull
+                {
+// 		    TMutex::scoped_lock lock;
+// 		    lock.acquire(pFBNN->W_RWMutex,false);
+// 		    lock.release();//reader lock tbb
+		    boost::shared_lock<RWMutex> rlock(pFBNN->W_RWMutex);		    
+                    set_m_oWs(pFBNN->get_m_oWs());
+                    if(m_fMomentum > 0)
+                        set_m_oVWs(pFBNN->get_m_oVWs());
+		    rlock.unlock();
+                }
+                int curBatchSize = opts.batchsize;
+                if(j == ibatchNum - 1 && train_x.rows() % opts.batchsize != 0)
+                    curBatchSize = train_x.rows() % opts.batchsize;
+                FMatrix batch_x(curBatchSize,train_x.columns());
+                for(int r = 0; r < curBatchSize; ++r)//randperm()
+                    row(batch_x,r) = row(train_x,iRandVec[j * opts.batchsize + r]);
 
-	      //Add noise to input (for use in denoising autoencoder)
-	      if(m_fInputZeroMaskedFraction != 0)
-		  batch_x = bitWiseMul(batch_x,(rand(curBatchSize,train_x.columns())>m_fInputZeroMaskedFraction));
+                //Add noise to input (for use in denoising autoencoder)
+                if(m_fInputZeroMaskedFraction != 0)
+                    batch_x = bitWiseMul(batch_x,(rand(curBatchSize,train_x.columns())>m_fInputZeroMaskedFraction));
 
-	      FMatrix batch_y(curBatchSize,train_y.columns());
-	      for(int r = 0; r < curBatchSize; ++r)//randperm()
-		  row(batch_y,r) = row(train_y,iRandVec[j * opts.batchsize + r]);
-	      
-	      L(i*ibatchNum+j,0) = nnff(batch_x,batch_y);
-	      nnbp();
-	      nnapplygrads();
+                FMatrix batch_y(curBatchSize,train_y.columns());
+                for(int r = 0; r < curBatchSize; ++r)//randperm()
+                    row(batch_y,r) = row(train_y,iRandVec[j * opts.batchsize + r]);
+
+                L(i*ibatchNum+j,0) = nnff(batch_x,batch_y);
+                nnbp();
+                nnapplygrads();
+                if(pFBNN)//push
+                {
+// 		    TMutex::scoped_lock lock;
+// 		    lock.acquire(W_RWMutex);
+// 		    lock.release();//writer lock tbb
+		    boost::unique_lock<RWMutex> wlock(pFBNN->W_RWMutex);
+                    pFBNN->set_m_odWs(m_odWs);
+                    pFBNN->nnapplygrads();
+		    wlock.unlock();
+                }
 // 	      std::cout << "end batch " << j << std::endl;
-	  }
-	  std::cout << std::endl;
-	  end = std::chrono::system_clock::now();
-	  elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(end-start).count();
+            }
+            std::cout << std::endl;
+	  });
 	  std::cout << "elapsed time: " << elapsedTime << "s" << std::endl;
 	  //loss calculate use nneval
 	  if(valid_x.rows() == 0 || valid_y.rows() == 0){
@@ -91,10 +115,10 @@ namespace ff
       }
 
   }
-  void FBNN::train(const FMatrix & train_x, const FMatrix & train_y, const Opts & opts)
+  void FBNN::train(const FMatrix & train_x, const FMatrix & train_y, const Opts & opts, const FBNN_ptr pFBNN)
   {
       FMatrix emptyM;
-      train(train_x,train_y,opts,emptyM,emptyM);      
+      train(train_x,train_y,opts,emptyM,emptyM,pFBNN);      
   }
   
   //NNFF performs a feedforward pass

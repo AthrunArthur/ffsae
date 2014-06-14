@@ -6,12 +6,21 @@
 #include "nn/opt.h"
 #include "utils/math.h"
 #include "nn/loss.h"
+#include "utils/utils.h"
+//mutex
+#include <boost/thread/locks.hpp>
+#include <boost/thread/shared_mutex.hpp>
 
 namespace ff
 {
   /* This class represents Feedforward Backpropagate Neural Network
    */
-
+  class FBNN;
+  typedef std::shared_ptr<FBNN> FBNN_ptr;
+  
+//   typedef tbb::spin_rw_mutex RWMutex;
+  typedef boost::shared_mutex RWMutex;
+  
   class FBNN{
     public:
       FBNN(const Arch_t & arch, std::string activeStr = "tanh_opt", int learningRate = 2, double zeroMaskedFraction = 0, bool testing = false, std::string outputStr = "sigm");
@@ -22,10 +31,38 @@ namespace ff
       std::vector<FMatrix_ptr> & get_m_oVWs(void){return m_oVWs;};
       std::vector<FMatrix_ptr> & get_m_oPs(void){return m_oPs;};
       std::vector<FMatrix_ptr> & get_m_oAs(void){return m_oAs;};
+      std::vector<FMatrix_ptr> & get_m_odWs(void){return m_odWs;};
+      
+      void set_m_oWs(const std::vector<FMatrix_ptr> & oWs){
+	for(int i = 0; i < oWs.size(); i++)
+	  *m_oWs[i] = *oWs[i];	
+      };
+      void set_m_oVWs(const std::vector<FMatrix_ptr> & oVWs){
+	for(int i = 0; i < oVWs.size(); i++)
+	  *m_oVWs[i] = *oVWs[i];	  
+      };      
+      void set_m_odWs(const std::vector<FMatrix_ptr> & odWs){
+	if(m_odWs.empty())
+	{
+	  for(int i = 0; i < odWs.size(); i++)
+	  {
+	    FMatrix m(*odWs[i]);
+	    m_odWs.push_back(std::make_shared<FMatrix>(m));
+	  }
+	}
+	else
+	{
+	  for(int i = 0; i < odWs.size(); i++)
+	  {
+	    *m_oWs[i] = *odWs[i];	
+	  }
+	}
+      };   
+      
 
-      void      train(const FMatrix & train_x, const FMatrix & train_y, const Opts & opts, const FMatrix & valid_x, const FMatrix & valid_y);
+      void      train(const FMatrix & train_x, const FMatrix & train_y, const Opts & opts, const FMatrix & valid_x, const FMatrix & valid_y, const FBNN_ptr pFBNN = nullptr);
 
-      void      train(const FMatrix & train_x, const FMatrix & train_y , const Opts & opts);
+      void      train(const FMatrix & train_x, const FMatrix & train_y , const Opts & opts, const FBNN_ptr pFBNN = nullptr);
       double    nnff(const FMatrix & x, const FMatrix & y);
       void      nnbp(void);
       void	nnapplygrads(void);
@@ -33,6 +70,8 @@ namespace ff
       void	nneval(Loss & loss,const FMatrix & train_x, const FMatrix & train_y);
       double	nntest(const FMatrix & x, const FMatrix & y);
       void	nnpredict(const FMatrix & x, const FMatrix & y, FColumn & labels);
+      
+      RWMutex W_RWMutex;//only needed in para & master -- How to avoid when unnecessary? public
       
       protected:
         
@@ -64,10 +103,10 @@ namespace ff
       FMatrix_ptr  m_oLp;//Loss matrix
       FMatrix_ptr  m_oEp;//Error matrix
       
-
+      
     
   };//end class FBNN
-  typedef std::shared_ptr<FBNN> FBNN_ptr;
+//   typedef std::shared_ptr<FBNN> FBNN_ptr;
 }//end namespace ff
 
 #endif

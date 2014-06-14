@@ -10,12 +10,13 @@ env = Environment(CXXFLAGS='-std=c++11 -g',
     RPATH=[lib_path, '/usr/local/lib'])
 
 libs = ['matio', 'ffsae']
-env.Program('test_matio.cpp', LIBS=['matio'])
-env.Program('test_slice.cpp', LIBS=libs)
+#env.Program('test_matio.cpp', LIBS=['matio'])
+#env.Program('test_slice.cpp', LIBS=libs)
 
-env.Program('test_blaze.cpp', LIBS=libs+['blaze'])
-env.Program('test_dtype.cpp', LIBS=libs+['blaze'])
-env.Program('test_sae.cpp', LIBS=libs + ['blaze'])
-env.Program('test_math.cpp', LIBS=libs + ['blaze'])
-env.Program('test_matlib.cpp', LIBS=libs + ['blaze'])
-env.Program('test_dsource.cpp', LIBS=libs + ['blaze'])
+env.Program('test_perf.cpp', LIBS=libs+['blaze'])
+env.Program('test_blaze.cpp', LIBS=['blaze'])
+#env.Program('test_dtype.cpp', LIBS=libs+['blaze'])
+#env.Program('test_sae.cpp', LIBS=libs + ['blaze'])
+#env.Program('test_math.cpp', LIBS=libs + ['blaze'])
+#env.Program('test_matlib.cpp', LIBS=libs + ['blaze'])
+#env.Program('test_dsource.cpp', LIBS=libs + ['blaze'])
