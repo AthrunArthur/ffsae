@@ -2,6 +2,11 @@
 
 #include "common/common.h"
 #include "dtype/type.h"
+#include "common/scope_guard.h"
+#include <matio.h>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
 
 namespace ff
 {
@@ -12,6 +17,6 @@ namespace ff
         FMatrix_ptr test_x;
         FMatrix_ptr test_y;
   };//end struct TData
-
+  FMatrix_ptr read_matrix_in_mat(mat_t * mat, const char *varname);
   TData read_data();
 }

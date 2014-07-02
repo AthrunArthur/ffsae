@@ -29,8 +29,8 @@ add_definitions(-DUSING_FF_NONBLOCKING_QUEUE)
 # add_executable(t_matlib test_matlib.cpp)
 # target_link_libraries(t_matlib ${ffsae_libs})
 # 
-# add_executable(t_sae test_sae.cpp)
-# target_link_libraries(t_sae ${ffsae_libs})
+#add_executable(t_sae test_sae.cpp)
+#target_link_libraries(t_sae ${ffsae_libs})
 # 
 # add_executable(t_slice test_slice.cpp)
 # target_link_libraries(t_slice ${ffsae_libs})
@@ -38,5 +38,8 @@ add_definitions(-DUSING_FF_NONBLOCKING_QUEUE)
 # add_executable(t_perf test_perf.cpp)
 # target_link_libraries(t_perf ${ffsae_libs} boost_system)
 
-add_executable(p_sae sae_para.cpp)
-target_link_libraries(p_sae ${ffsae_libs} ${ff_libs})
+#add_executable(p_sae sae_para.cpp)
+#target_link_libraries(p_sae ${ffsae_libs} ${ff_libs})
+
+add_executable(t_divide test_divide.cpp)
+target_link_libraries(t_divide ${ffsae_libs})

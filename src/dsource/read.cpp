@@ -1,16 +1,9 @@
 #include "dsource/read.h"
-#include "common/common.h"
-#include "common/scope_guard.h"
-#include <matio.h>
-#include <cstdlib>
-#include <cstring>
-#include <iostream>
-
 
 namespace ff
 {
 
-  static FMatrix_ptr read_matrix_in_mat(mat_t * mat, const char *varname)
+  FMatrix_ptr read_matrix_in_mat(mat_t * mat, const char *varname)
   {
     matvar_t  * tvar = Mat_VarRead(mat, varname);
     int rows = tvar->dims[0];
