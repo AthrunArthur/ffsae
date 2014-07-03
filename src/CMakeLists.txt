@@ -9,6 +9,7 @@ set(src dsource/Slice.cpp
   dsource/divide.cpp
   nn/fbnn.cpp
   sae/sae.cpp
+  sae/sae_UDL.cpp
   utils/math.cpp
   utils/matlib.cpp
   utils/utils.cpp
