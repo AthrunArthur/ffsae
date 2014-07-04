@@ -20,10 +20,15 @@ boost::any SAE_create(void )
 }
 void SAE_delete(boost::any sae_pointer)
 {
-    delete boost::any_cast<SAE *>(sae_pointer);
+    SAE * psae = boost::any_cast<SAE *>(sae_pointer);
+    if(psae)
+      delete psae;
 }
 bool SAE_run(boost::any sae_pointer,std::string data_dir)
 {
+    SAE * psae = boost::any_cast<SAE *>(sae_pointer);
+    if(!psae)
+      return false;
     FMatrix_ptr train_x = read_matrix_from_dir(data_dir);
     if(train_x == nullptr)
         return false;
@@ -31,12 +36,15 @@ bool SAE_run(boost::any sae_pointer,std::string data_dir)
     Opts opts;
 //    opts.numpochs = 2;//50
     std::cout << "numpochs = " << opts.numpochs << std::endl;
-    boost::any_cast<SAE *>(sae_pointer)->SAETrain(*train_x,opts);
+    psae->SAETrain(*train_x,opts);
     return true;
 }
 
 void train_NN(boost::any sae_pointer,std::string input_file)
 {
+    SAE * psae = boost::any_cast<SAE *>(sae_pointer);
+    if(!psae)
+      return;
     TData d = read_data(input_file);
     if(d.train_x == nullptr || d.train_y == nullptr || d.test_x == nullptr || d.test_y == nullptr)
       return;
@@ -80,7 +88,7 @@ void train_NN(boost::any sae_pointer,std::string input_file)
 
     for(int i = 0; i < m_oWs.size() - 1; i++)
     {
-        *m_oWs[i] = *(boost::any_cast<SAE *>(sae_pointer)->get_m_oAEs()[i]->get_m_oWs())[0];//nn.W{i} = sae.ae{i}.W{1};
+        *m_oWs[i] = *(psae->get_m_oAEs()[i]->get_m_oWs())[0];//nn.W{i} = sae.ae{i}.W{1};
     }
 
 

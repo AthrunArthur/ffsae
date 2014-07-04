@@ -1,5 +1,4 @@
 #include "nn/fbnn.h"
-#include <boost/concept_check.hpp>
 
 
 namespace ff
