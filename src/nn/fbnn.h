@@ -102,8 +102,7 @@ namespace ff
       
       FMatrix_ptr  m_oLp;//Loss matrix
       FMatrix_ptr  m_oEp;//Error matrix
-      
-      
+
     
   };//end class FBNN
 //   typedef std::shared_ptr<FBNN> FBNN_ptr;

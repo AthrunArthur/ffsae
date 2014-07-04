@@ -18,5 +18,5 @@ namespace ff
         FMatrix_ptr test_y;
   };//end struct TData
   FMatrix_ptr read_matrix_in_mat(mat_t * mat, const char *varname);
-  TData read_data();
+  TData read_data(std::string input_file = "../data/mnist_uint8.mat");
 }

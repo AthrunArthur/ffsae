@@ -16,6 +16,7 @@ namespace ff
         SAE(const Arch_t & arch);
         void    SAETrain(const FMatrix & train_x, const Opts & opts, const SAE_ptr & pSAE = nullptr);
 	std::vector<FBNN_ptr> & get_m_oAEs(void){return m_oAEs;};
+	~SAE(){};//add for extern "C", use in UDL
 
     protected:
         std::vector<FBNN_ptr>        m_oAEs;
@@ -23,7 +24,7 @@ namespace ff
         double          m_fLearningRate;
         double          m_fInputZeroMaskedFraction;
   };//end class SAE
-//   typedef std::shared_ptr<SAE> SAE_ptr;
+  
 };//end namespace ff
 
 #endif

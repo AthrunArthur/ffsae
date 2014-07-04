@@ -20,7 +20,7 @@ boost::any SAE_create(void )
 }
 void SAE_delete(boost::any sae_pointer)
 {
-  delete boost::any_cast<SAE *>(sae_pointer);
+    delete boost::any_cast<SAE *>(sae_pointer);
 }
 bool SAE_run(boost::any sae_pointer,std::string data_dir)
 {
@@ -35,11 +35,21 @@ bool SAE_run(boost::any sae_pointer,std::string data_dir)
     return true;
 }
 
-void train_NN(boost::any sae_pointer)
+void train_NN(boost::any sae_pointer,std::string input_file)
 {
-    TData d = read_data();
+    TData d = read_data(input_file);
+    if(d.train_x == nullptr || d.train_y == nullptr || d.test_x == nullptr || d.test_y == nullptr)
+      return;
     *d.train_x = (*d.train_x) / 255;
     *d.test_x = (*d.test_x) / 255;
+
+    //add for quick test
+    *d.train_x = submatrix(*d.train_x,0UL,0UL,20,d.train_x->columns());
+    *d.train_y = submatrix(*d.train_y,0UL,0UL,20,d.train_y->columns());
+    *d.test_x = submatrix(*d.test_x,0UL,0UL,20,d.test_x->columns());
+    *d.test_y = submatrix(*d.test_y,0UL,0UL,20,d.test_y->columns());
+
+
     //Use the SDAE to initialize a FFNN
     std::cout << "Train an FFNN" << std::endl;
     Arch_t cn(3UL);
