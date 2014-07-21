@@ -320,6 +320,7 @@ namespace ff
   void ff::FBNN::nneval(Loss & loss, const FMatrix& train_x, const FMatrix& train_y, const FMatrix& valid_x, const FMatrix& valid_y)
   {
 //     std::cout << "start nneval" << std::endl;
+    m_fTesting = true;
     //training performance
     loss.train_error.push_back(nnff(train_x,train_y));
     
@@ -327,6 +328,7 @@ namespace ff
     if(valid_x.rows() != 0 && valid_y.rows() != 0)
       loss.valid_error.push_back(nnff(valid_x,valid_y));
     
+    m_fTesting = false;
     //calc misclassification rate if softmax
     if(m_strOutput == "softmax")
     {
