@@ -1,16 +1,9 @@
 #include "dsource/read.h"
-#include "common/common.h"
-#include "common/scope_guard.h"
-#include <matio.h>
-#include <cstdlib>
-#include <cstring>
-#include <iostream>
-
 
 namespace ff
 {
 
-  static FMatrix_ptr read_matrix_in_mat(mat_t * mat, const char *varname)
+  FMatrix_ptr read_matrix_in_mat(mat_t * mat, const char *varname)
   {
     matvar_t  * tvar = Mat_VarRead(mat, varname);
     int rows = tvar->dims[0];
@@ -28,9 +21,9 @@ namespace ff
     Mat_VarFree(tvar);
     return res;
   }
-  TData         read_data()
+  TData         read_data(std::string input_file)
   {
-    const char * fileName = "../data/mnist_uint8.mat";
+    const char * fileName = input_file.c_str();
     TData res;
     mat_t *mat = nullptr;
     scope_guard _l([&mat, fileName](){

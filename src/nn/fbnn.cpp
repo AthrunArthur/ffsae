@@ -35,6 +35,7 @@ namespace ff
       }
 
   }
+
   
   //trains a neural net
   void FBNN::train(const FMatrix & train_x, const FMatrix & train_y, const Opts & opts, const FMatrix & valid_x, const FMatrix & valid_y, const FBNN_ptr pFBNN)

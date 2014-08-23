@@ -6,8 +6,10 @@ include_directories(${ffsae_dir} ${boost_dir})
 
 set(src dsource/Slice.cpp
   dsource/read.cpp
+  dsource/divide.cpp
   nn/fbnn.cpp
   sae/sae.cpp
+  sae/sae_UDL.cpp
   utils/math.cpp
   utils/matlib.cpp
   utils/utils.cpp
